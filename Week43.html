@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2019 by anonymous (http://jsbin.com/yizividuhi/1/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>mom - w43</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+
+  <style>
+    svg text 
+      { font: 10px sans-serif; }
+  </style>
+
+</head>
+<body>
+
+  <div id="barras"></div>
+
+<!-- COMENTARIO
+  <svg width="200" height="200">
+    <rect x="100" y="100" width="95" height="95" fill="blue" stroke="black" stroke-width="5" />
+    <line x1="0" y1="0" x2="200" y2="200" stroke="red" stroke-width="5" />
+
+  <circle cx=150 cy=50 r=50 fill="white" stroke="black" />
+
+  </svg>
+IN COMENTARIO 
+-->
+
+
+<script>
+/**
+var datos = [
+  {"nombre" : "Alberto Fernandez", "seguidores" : 426191},
+  {"nombre" : "Alberto Cairo", "seguidores" : 49108}, 
+];
+
+d3.select("body").selectAll("p")
+  .data(datos).enter().append("p")
+  .text( function(d) { return d.nombre + " tiene " + d.seguidores.toLocaleString('ES-ar') + " seguidores"; }  );
+
+**/
+
+d3.csv("https://download.data.world/s/5u4n6qivdwcayxseuldbt7xw3ap4ld").then(function(data) {  
+  var max_s = 0;
+  data.forEach(function(d) {
+    d.suicides_by_year = +d.suicides_by_year;
+    if (d.suicides_by_year > max_s) {
+       max_s = d.suicides_by_year;
+    }
+  });
+
+  console.log(max_s);
+  vis( data, max_s );
+  
+
+});
+
+function vis(dw,mx) {
+
+  var ancho = d3.scaleLinear()
+    .domain([0, mx])
+    .range([0, 300]);
+
+  var svg = d3.select("div#barras").append("svg")
+    .attr("width",400)
+    .attr("height",500);  
+
+  svg.selectAll("text").data(dw).enter().append("text")
+     .attr("x",10)
+     .attr("y", function(d,i) { return 10+(i*10); } )
+     .text( function(d,i) { return d.year; }  );
+
+  svg.selectAll("rect").data(dw).enter().append("rect")
+     .attr("x",40)
+     .attr("y", function(d,i) { return 2+i*10; } )
+     .attr("width", function(d,i) { return ancho(d.suicides_by_year); } )
+     .attr("height",8)
+     .attr("fill", function(d,i) { return (d.suicides_by_year < mx? "white" : "red" ) } )
+     .attr("stroke","black")
+       .append("title").text( d => d.suicides_by_year.toLocaleString()  );
+
+}
+
+</script>
+
+<script id="jsbin-javascript">
+var datos = ("uno", "dos", "tres");
+
+d3.select("body").selectAll("h1").data(datos).enter()append("h1").text("hola mundo")
+
+d3.selectAll("h1").data([])
+
+
+</script>
+</body>
+</html>
